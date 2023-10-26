@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>TestCentric.Agent</RootNamespace>
+		<TargetFrameworks>net7.0</TargetFrameworks>
+		<GenerateSupportedRuntime>false</GenerateSupportedRuntime>
+		<OutputPath>..\..\bin\$(Configuration)\agent\</OutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
+		<AssemblyTitle>TestCentric Agent Core</AssemblyTitle>
+		<Description>Base for all Pluggable Agents</Description>
+		<Copyright>Copyright (c) 2023 Charlie Poole</Copyright>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="TestCentric.InternalTrace" Version="1.0.0" />
+		<PackageReference Include="TestCentric.Engine.Core" Version="2.0.0-beta3" />		
+	</ItemGroup>
+
+</Project>

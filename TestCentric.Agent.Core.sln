@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{49BC1DFB-828F-49F4-B2B4-752AB470481D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		build.cake = build.cake
+		build.cmd = build.cmd
+		build.ps1 = build.ps1
+		build.sh = build.sh
+		GitReleaseManager.yaml = GitReleaseManager.yaml
+		GitVersion.yml = GitVersion.yml
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+		VERIFICATION.txt = VERIFICATION.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cake", "cake", "{7B695A1B-C3C8-472A-924A-0AFA437C100A}"
+	ProjectSection(SolutionItems) = preProject
+		cake\build-settings.cake = cake\build-settings.cake
+		cake\building.cake = cake\building.cake
+		cake\check-headers.cake = cake\check-headers.cake
+		cake\package-checks.cake = cake\package-checks.cake
+		cake\package-definition.cake = cake\package-definition.cake
+		cake\package-tester.cake = cake\package-tester.cake
+		cake\package-tests.cake = cake\package-tests.cake
+		cake\packaging.cake = cake\packaging.cake
+		cake\publishing.cake = cake\publishing.cake
+		cake\releasing.cake = cake\releasing.cake
+		cake\test-reports.cake = cake\test-reports.cake
+		cake\test-results.cake = cake\test-results.cake
+		cake\testcentric-gui.cake = cake\testcentric-gui.cake
+		cake\testing.cake = cake\testing.cake
+		cake\versioning.cake = cake\versioning.cake
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCentric.Agent.Core", "src\TestCentric.Agent.Core\TestCentric.Agent.Core.csproj", "{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCentric.Agent.Core.Tests", "src\tests\TestCentric.Agent.Core.Tests.csproj", "{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Debug|x64.Build.0 = Debug|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Debug|x86.Build.0 = Debug|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Release|x64.ActiveCfg = Release|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Release|x64.Build.0 = Release|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Release|x86.ActiveCfg = Release|Any CPU
+		{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}.Release|x86.Build.0 = Release|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x64.Build.0 = Release|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B695A1B-C3C8-472A-924A-0AFA437C100A} = {49BC1DFB-828F-49F4-B2B4-752AB470481D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAB7BD1E-1034-47CD-AA8E-FD4AC034193B}
+	EndGlobalSection
+EndGlobal
