@@ -19,17 +19,13 @@ BuildSettings.Packages.Add(new NuGetPackage(
 	source: "nuget/TestCentric.Agent.Core.nuspec",
 	checks: new PackageCheck[] {
 		HasFiles("LICENSE.txt", "README.md", "testcentric.png"),
-		HasDirectory("lib/net70").WithFiles("TestCentric.Agent.Core.dll"),
+		HasDirectory("lib/net20").WithFiles("TestCentric.Agent.Core.dll"),
+		HasDirectory("lib/net462").WithFiles("TestCentric.Agent.Core.dll"),
+		HasDirectory("lib/netstandard2.0").WithFiles("TestCentric.Agent.Core.dll"),
+		HasDirectory("lib/netcoreapp3.1").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDependency("TestCentric.InternalTrace"),
 		HasDependency("TestCentric.Engine.Core")
 	}
-	/*packageContent: new PackageContent()
-		.WithRootFiles("../../LICENSE.txt", "../../README.md", "../../testcentric.png")
-		.WithDirectories(
-			new DirectoryContent("lib/net70").WithFiles("agent/TestCentric.Agent.Core.dll") )
-		.WithDependencies(
-			new PackageReference("TestCentric.InternalTrace", "1.0.0"),
-			new PackageReference("TestCentric.Engine.Core", "2.0.0-beta3") )*/
 ));
 
 //////////////////////////////////////////////////////////////////////

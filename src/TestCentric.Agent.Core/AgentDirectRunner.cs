@@ -4,14 +4,9 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using TestCentric.Agents.TextOutput;
 using TestCentric.Engine;
@@ -42,7 +37,7 @@ namespace TestCentric.Agents
                 WriteHeader();
 
 #if NETFRAMEWORK
-                var runner = new TestDomainRunner(new NUnit.Engine.TestPackage(testFile));
+                var runner = new TestDomainRunner(new TestPackage(testFile));
 #else
                 var runner = new LocalTestRunner(new TestPackage(testFile));
 #endif
@@ -76,14 +71,26 @@ namespace TestCentric.Agents
         private void WriteHeader()
         {
             var ea = Assembly.GetEntryAssembly();
-            var title = ea?.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
-            var version = ea?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
-            var copyright = ea?.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+            var title = GetAttribute<AssemblyTitleAttribute>(ea)?.Title;
+            var version = GetAttribute<AssemblyFileVersionAttribute>(ea)?.Version;
+            var copyright = GetAttribute<AssemblyCopyrightAttribute>(ea)?.Copyright;
 
             OutWriter.WriteLine(ColorStyle.Header, $"{title} {version}");
             OutWriter.WriteLine(ColorStyle.SubHeader, copyright);
             OutWriter.WriteLine(ColorStyle.SubHeader, DateTime.Now.ToString(CultureInfo.CurrentCulture.DateTimeFormat.FullDateTimePattern));
             OutWriter.WriteLine();
+        }
+
+        private TAttr GetAttribute<TAttr>(Assembly assembly) where TAttr : Attribute
+        {
+#if (NETCOREAPP || NET462_OR_GREATER)
+            return assembly?.GetCustomAttribute<TAttr>();
+#else
+            var attrs = assembly?.GetCustomAttributes(typeof(TAttr), false);
+            return attrs.Length > 0
+                ? attrs[0] as TAttr
+                : null;
+#endif
         }
 
         internal void WriteRunSettingsReport(XmlNode resultNode)
@@ -283,7 +290,7 @@ namespace TestCentric.Agents
             string fullName = resultNode.GetAttribute("fullname");
             string message = (resultNode.SelectSingleNode("failure/message") ?? resultNode.SelectSingleNode("reason/message"))?.InnerText.Trim(EOL_CHARS);
 
-            OutWriter.WriteLine(GetColorStyle(resultState),
+            OutWriter.WriteLine(GetColorStyle(),
                 string.Format($"{++ReportIndex}) {resultState} : {fullName}"));
             if (!string.IsNullOrEmpty(message))
                 OutWriter.WriteLine(ColorStyle.Output, message);
@@ -292,7 +299,7 @@ namespace TestCentric.Agents
                 OutWriter.WriteLine(stackTrace);
             OutWriter.WriteLine();
 
-            ColorStyle GetColorStyle(string resultState)
+            ColorStyle GetColorStyle()
             {
                 return resultState == "Failed"
                     ? ColorStyle.Failure
