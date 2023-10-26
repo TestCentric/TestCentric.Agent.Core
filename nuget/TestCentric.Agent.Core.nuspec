@@ -24,6 +24,9 @@
 		<file src="../../LICENSE.txt" />
 		<file src="../../README.md" />
 		<file src="../../testcentric.png" />
-		<file src="agent/TestCentric.Agent.Core.dll" target="lib/net70" />
+		<file src="agent/net20/TestCentric.Agent.Core.dll" target="lib/net20" />
+		<file src="agent/net462/TestCentric.Agent.Core.dll" target="lib/net462" />
+		<file src="agent/netstandard2.0/TestCentric.Agent.Core.dll" target="lib/netstandard2.0" />
+		<file src="agent/netcoreapp3.1/TestCentric.Agent.Core.dll" target="lib/netcoreapp3.1" />
 	</files>
 </package>
