@@ -21,7 +21,11 @@ BuildSettings.Packages.Add(new NuGetPackage(
 	packageContent: new PackageContent()
 		.WithRootFiles("../../LICENSE.txt", "../../README.md", "../../testcentric.png")
 		.WithDirectories(
-			new DirectoryContent("lib/net70").WithFiles("agent/TestCentric.Agent.Core.dll") )));
+			new DirectoryContent("lib/net70").WithFiles("agent/TestCentric.Agent.Core.dll") )
+		.WithDependencies(
+			new PackageReference("TestCentric.InternalTrace", "1.0.0"),
+			new PackageReference("TestCentric.Engine.Core", "2.0.0-beta3") )
+));
 
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
