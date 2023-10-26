@@ -16,15 +16,20 @@ BuildSettings.Initialize
 BuildSettings.Packages.Add(new NuGetPackage(
 	"TestCentric.Agent.Core",
 	title: "TestCentric Agent Core",
-	description: "Common code used for TestCentric pluggable agents",
-	tags: new [] { "testcentric", "pluggable", "agent" },
-	packageContent: new PackageContent()
+	source: "nuget/TestCentric.Agent.Core.nuspec",
+	checks: new PackageCheck[] {
+		HasFiles("LICENSE.txt", "README.md", "testcentric.png"),
+		HasDirectory("lib/net70").WithFiles("TestCentric.Agent.Core.dll"),
+		HasDependency("TestCentric.InternalTrace"),
+		HasDependency("TestCentric.Engine.Core")
+	}
+	/*packageContent: new PackageContent()
 		.WithRootFiles("../../LICENSE.txt", "../../README.md", "../../testcentric.png")
 		.WithDirectories(
 			new DirectoryContent("lib/net70").WithFiles("agent/TestCentric.Agent.Core.dll") )
 		.WithDependencies(
 			new PackageReference("TestCentric.InternalTrace", "1.0.0"),
-			new PackageReference("TestCentric.Engine.Core", "2.0.0-beta3") )
+			new PackageReference("TestCentric.Engine.Core", "2.0.0-beta3") )*/
 ));
 
 //////////////////////////////////////////////////////////////////////
