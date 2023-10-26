@@ -18,28 +18,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		VERIFICATION.txt = VERIFICATION.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cake", "cake", "{7B695A1B-C3C8-472A-924A-0AFA437C100A}"
-	ProjectSection(SolutionItems) = preProject
-		cake\build-settings.cake = cake\build-settings.cake
-		cake\building.cake = cake\building.cake
-		cake\check-headers.cake = cake\check-headers.cake
-		cake\package-checks.cake = cake\package-checks.cake
-		cake\package-definition.cake = cake\package-definition.cake
-		cake\package-tester.cake = cake\package-tester.cake
-		cake\package-tests.cake = cake\package-tests.cake
-		cake\packaging.cake = cake\packaging.cake
-		cake\publishing.cake = cake\publishing.cake
-		cake\releasing.cake = cake\releasing.cake
-		cake\test-reports.cake = cake\test-reports.cake
-		cake\test-results.cake = cake\test-results.cake
-		cake\testcentric-gui.cake = cake\testcentric-gui.cake
-		cake\testing.cake = cake\testing.cake
-		cake\versioning.cake = cake\versioning.cake
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCentric.Agent.Core", "src\TestCentric.Agent.Core\TestCentric.Agent.Core.csproj", "{5D69F5C5-B5E7-4065-8F17-21DA60E07A25}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCentric.Agent.Core.Tests", "src\tests\TestCentric.Agent.Core.Tests.csproj", "{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{B4104656-8E8B-4416-90FF-5DAF1E65B7CC}"
+	ProjectSection(SolutionItems) = preProject
+		nuget\TestCentric.Agent.Core.nuspec = nuget\TestCentric.Agent.Core.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,7 +66,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{7B695A1B-C3C8-472A-924A-0AFA437C100A} = {49BC1DFB-828F-49F4-B2B4-752AB470481D}
+		{B4104656-8E8B-4416-90FF-5DAF1E65B7CC} = {49BC1DFB-828F-49F4-B2B4-752AB470481D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAB7BD1E-1034-47CD-AA8E-FD4AC034193B}
