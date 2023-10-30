@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{B4104656
 		nuget\TestCentric.Agent.Core.nuspec = nuget\TestCentric.Agent.Core.nuspec
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mock-assembly", "src\mock-assembly\mock-assembly.csproj", "{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,18 @@ Global
 		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x64.Build.0 = Release|Any CPU
 		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x86.ActiveCfg = Release|Any CPU
 		{2C2DA4FB-5254-4759-A68D-15C89F8DF0F5}.Release|x86.Build.0 = Release|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Debug|x86.Build.0 = Debug|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Release|x64.Build.0 = Release|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{EB3D0D0E-C466-45D8-8F5E-A5FD296A98BF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
