@@ -41,7 +41,7 @@ namespace TestCentric.Engine.Runners
             Guard.ArgumentNotNull(package, nameof(package));
             Guard.ArgumentValid(package.SubPackages.Count == 0, "Only one assembly may be loaded by an agent", nameof(package));
             Guard.ArgumentValid(package.FullName != null, "Package may not be anonymous", nameof(package));
-            Guard.ArgumentValid(package.IsAssemblyPackage(), "Must be an assembly package", nameof(package));
+            Guard.ArgumentValid(package.IsAssemblyPackage, "Must be an assembly package", nameof(package));
 
             // Bypass the resolver if not in the default AppDomain. This prevents trying to use the resolver within
             // NUnit's own automated tests (in a test AppDomain) which does not make sense anyway.

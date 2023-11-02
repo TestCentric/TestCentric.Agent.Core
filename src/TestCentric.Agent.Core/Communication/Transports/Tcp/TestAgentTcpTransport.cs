@@ -105,7 +105,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
                     switch (command.CommandName)
                     {
                         case MessageCode.CreateRunner:
-                            var package = new TestPackageSerializer().Deserialize(command.Argument);
+                            var package = TestPackage.Deserialize(command.Argument);
                             _runner = CreateRunner(package);
                             break;
                         case MessageCode.LoadCommand:
