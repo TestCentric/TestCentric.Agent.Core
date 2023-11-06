@@ -11,6 +11,8 @@ using TestCentric.Engine.Agents;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Communication.Messages;
 using TestCentric.Engine.Communication.Protocols;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace TestCentric.Engine.Communication.Transports.Tcp
 {
@@ -21,6 +23,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
         private string _agencyUrl;
         private Socket _clientSocket;
         private ITestEngineRunner _runner;
+        private XmlSerializer _testPackageSerializer = new XmlSerializer(typeof(TestPackage));
 
         // Transport is only created by the pluggable agents, not by the engine itself
         public TestAgentTcpTransport(RemoteTestAgent agent, string serverUrl)
@@ -105,7 +108,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
                     switch (command.CommandName)
                     {
                         case MessageCode.CreateRunner:
-                            var package = TestPackage.Deserialize(command.Argument);
+                            var package = _testPackageSerializer.Deserialize(new StringReader(command.Argument)) as TestPackage;
                             _runner = CreateRunner(package);
                             break;
                         case MessageCode.LoadCommand:
