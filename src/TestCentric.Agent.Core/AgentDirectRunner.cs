@@ -36,10 +36,12 @@ namespace TestCentric.Agents
 
                 WriteHeader();
 
+                TestPackage package = new TestPackage(testFile).SubPackages[0];
+
 #if NETFRAMEWORK
-                var runner = new TestDomainRunner(new TestPackage(testFile));
+                var runner = new TestDomainRunner(package);
 #else
-                var runner = new LocalTestRunner(new TestPackage(testFile));
+                var runner = new LocalTestRunner(package);
 #endif
                 var xmlResult = runner.Run(null, TestFilter.Empty).Xml;
 

@@ -8,6 +8,11 @@
 		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
+	<!-- Suppress warnings due to use of version 7.0 of Microsoft.Extensions.DependencyModel -->
+	<PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+	</PropertyGroup>
+
 	<ItemGroup Condition="'$(TargetFramework)'=='net35'">
 		<Reference Include="System.Configuration" />
 		<Reference Include="System.Runtime.Remoting" />
