@@ -16,9 +16,9 @@
     <tags>testcentric</tags>
     <repository type="Git" url="https://github.com/TestCentric/TestCentric.Cake.Recipe" />
     <dependencies>
-      <dependency id="TestCentric.InternalTrace" version="1.0.0" />
-      <dependency id="TestCentric.Engine.Core" version="2.0.0-dev00020" />
-    </dependencies>
+        <dependency id="TestCentric.InternalTrace" version="1.0.0" />
+        <dependency id="TestCentric.Engine.Core" version="2.0.0-dev00023" />
+	</dependencies>
   </metadata>
 	<files>
 		<file src="../../LICENSE.txt" />
