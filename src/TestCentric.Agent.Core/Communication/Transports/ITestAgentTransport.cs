@@ -7,9 +7,11 @@ using TestCentric.Engine.Agents;
 
 namespace TestCentric.Engine.Communication.Transports
 {
-    public interface ITestAgentTransport : ITransport
+    public interface ITestAgentTransport
     {
         TestAgent Agent { get; }
         ITestEngineRunner CreateRunner(TestPackage package);
+        bool Start();
+        void Stop();
     }
 }
