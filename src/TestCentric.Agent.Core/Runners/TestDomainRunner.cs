@@ -24,18 +24,20 @@ namespace TestCentric.Engine.Runners
             _domainManager = new DomainManager();
         }
 
-        protected override TestEngineResult LoadPackage()
+        public override TestEngineResult Load()
         {
             TestDomain = _domainManager.CreateDomain(TestPackage);
 
-            return base.LoadPackage();
+            return base.Load();
         }
 
         /// <summary>
         /// Unload any loaded TestPackage as well as the application domain.
         /// </summary>
-        public override void UnloadPackage()
+        public override void Unload()
         {
+            LoadResult = null;
+
             if (TestDomain != null)
             {
                 try
