@@ -11,6 +11,7 @@ using System.Threading;
 using TestCentric.Engine.Agents;
 using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
+using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine.Communication.Transports.Remoting
 {
