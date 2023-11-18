@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		GitReleaseManager.yaml = GitReleaseManager.yaml
 		GitVersion.yml = GitVersion.yml
 		LICENSE.txt = LICENSE.txt
+		NuGet.config = NuGet.config
 		README.md = README.md
 		VERIFICATION.txt = VERIFICATION.txt
 	EndProjectSection
