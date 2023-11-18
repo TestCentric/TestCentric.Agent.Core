@@ -1,5 +1,5 @@
 // Load the recipe
-#load nuget:?package=TestCentric.Cake.Recipe&version=1.1.0-dev00063
+#load nuget:?package=TestCentric.Cake.Recipe&version=1.1.0-dev00064
 // Comment out above line and uncomment below for local tests of recipe changes
 //#load ../TestCentric.Cake.Recipe/recipe/*.cake
 
@@ -24,7 +24,8 @@ BuildSettings.Packages.Add(new NuGetPackage(
 		HasDirectory("lib/netstandard2.0").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/netcoreapp3.1").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDependency(PackageReference.InternalTrace),
-		HasDependency(PackageReference.EngineCore.LatestDevBuild)
+		HasDependency(new PackageReference("TestCentric.Engine.Core", "2.0.0-beta4"))
+		//HasDependency(PackageReference.EngineCore.LatestDevBuild)
 	}
 ));
 
