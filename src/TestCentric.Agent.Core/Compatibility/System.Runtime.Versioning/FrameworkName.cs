@@ -5,7 +5,7 @@
 
 #if NET20 || NET35
 using System.Diagnostics;
-using TestCentric.Engine;
+using TestCentric;
 
 namespace System.Runtime.Versioning
 {
