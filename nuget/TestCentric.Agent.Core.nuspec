@@ -18,8 +18,12 @@
         <tags>testcentric</tags>
         <repository type="Git" url="https://github.com/TestCentric/TestCentric.Cake.Recipe" />
         <dependencies>
-            <dependency id="TestCentric.InternalTrace" version="1.0.0" />
-	    </dependencies>
+			<dependency id="Microsoft.Extensions.DependencyModel" version ="8.0.0" />
+			<dependency id="TestCentric.Engine.Api" version="2.0.0-dev00003" />
+			<dependency id="TestCentric.Extensibility" version="2.0.0" />
+			<dependency id="TestCentric.Metadata" version="2.0.0" />
+			<dependency id="TestCentric.InternalTrace" version="1.0.0" />
+		</dependencies>
     </metadata>
 	
 	<files>
@@ -30,6 +34,8 @@
 		<file src="agent/net462/TestCentric.Agent.Core.dll" target="lib/net462" />
 		<file src="agent/netstandard2.0/TestCentric.Agent.Core.dll" target="lib/netstandard2.0" />
 		<file src="agent/netcoreapp3.1/TestCentric.Agent.Core.dll" target="lib/netcoreapp3.1" />
+		<file src="agent/net6.0/TestCentric.Agent.Core.dll" target="lib/net6.0" />
+		<file src="agent/net8.0/TestCentric.Agent.Core.dll" target="lib/net8.0" />
 	</files>
 	
 </package>
