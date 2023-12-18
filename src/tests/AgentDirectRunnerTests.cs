@@ -14,7 +14,7 @@ namespace TestCentric.Agents
 {
     public class AgentDirectRunnerTests
     {
-        [Test]
+        [Test, Ignore("Exits NUnitLite - must run this in a separate process somehow")]
         public void RunAgentDirectly()
         {
             var options = new AgentOptions(MockAssembly.AssemblyPath);

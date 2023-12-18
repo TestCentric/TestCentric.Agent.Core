@@ -24,8 +24,6 @@ BuildSettings.Packages.Add(new NuGetPackage(
 		HasDirectory("lib/netstandard2.0").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/netcoreapp3.1").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDependency(PackageReference.InternalTrace),
-		HasDependency(new PackageReference("TestCentric.Engine.Core", "2.0.0-beta4"))
-		//HasDependency(PackageReference.EngineCore.LatestDevBuild)
 	}
 ));
 
