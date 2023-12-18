@@ -26,9 +26,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NUnit" Version="3.12.0" />
-		<PackageReference Include="NUnitLite" Version="3.12.0" />
-		<PackageReference Include="TestCentric.Engine.Api" Version="2.0.0-beta4" />
+		<PackageReference Include="NUnit" Version="3.13.3" />
+		<PackageReference Include="NUnitLite" Version="3.13.3" />
+		<PackageReference Include="TestCentric.Engine.Api" Version="2.0.0-dev00003" />
 		<PackageReference Include="TestCentric.Extensibility" Version="2.0.0" />
 	</ItemGroup>
 
