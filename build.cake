@@ -25,21 +25,6 @@ BuildSettings.Packages.Add(new NuGetPackage(
 		HasDirectory("lib/netcoreapp3.1").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/net6.0").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/net8.0").WithFiles("TestCentric.Agent.Core.dll"),
-		HasDependency(PackageReference.EngineApi.LatestDevBuild)
-			.WithFiles("lib/net20/TestCentric.Engine.Api.dll",
-					   "lib/net462/TestCentric.Engine.Api.dll",
-					   "lib/netstandard2.0/TestCentric.Engine.Api.dll"),
-		HasDependency(PackageReference.Extensibility)
-			.WithFiles("lib/net20/TestCentric.Extensibility.dll",
-					   "lib/net20/TestCentric.Extensibility.Api.dll",
-					   "lib/net462/TestCentric.Extensibility.dll",
-					   "lib/net462/TestCentric.Extensibility.Api.dll",
-					   "lib/netstandard2.0/TestCentric.Extensibility.dll",
-					   "lib/netstandard2.0/TestCentric.Extensibility.Api.dll"),
-		HasDependency(PackageReference.Metadata)
-			.WithFiles("lib/net20/testcentric.engine.metadata.dll",
-					   "lib/net40/testcentric.engine.metadata.dll",
-					   "lib/netstandard2.0/testcentric.engine.metadata.dll"),
 		HasDependency(PackageReference.InternalTrace)
 			.WithFiles("lib/net20/TestCentric.InternalTrace.dll",
 					   "lib/net462/TestCentric.InternalTrace.dll",
