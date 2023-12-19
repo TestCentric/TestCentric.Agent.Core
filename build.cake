@@ -25,7 +25,6 @@ BuildSettings.Packages.Add(new NuGetPackage(
 		HasDirectory("lib/netcoreapp3.1").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/net6.0").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/net8.0").WithFiles("TestCentric.Agent.Core.dll"),
-		HasDependency(new PackageReference("Microsoft.Extensions.DependencyModel", "8.0.0")),
 		HasDependency(PackageReference.EngineApi.LatestDevBuild)
 			.WithFiles("lib/net20/TestCentric.Engine.Api.dll",
 					   "lib/net462/TestCentric.Engine.Api.dll",
