@@ -9,6 +9,8 @@ using System.IO;
 using System.Security;
 using TestCentric.Engine.Agents;
 using TestCentric.Engine.Internal;
+using System.Reflection;
+
 #if NETFRAMEWORK
 using TestCentric.Engine.Communication.Transports.Remoting;
 #else
@@ -36,6 +38,7 @@ namespace TestCentric.Agents
             InternalTrace.Initialize(Path.Combine(options.WorkDirectory, logName), options.TraceLevel);
             log = InternalTrace.GetLogger(typeof(TAgent));
             log.Info($"{typeof(TAgent).Name} process {_pid} starting");
+            log.Info($"  Agent Path: {Assembly.GetExecutingAssembly().Location}");
 
             if (options.DebugAgent || options.DebugTests)
                 TryLaunchDebugger();

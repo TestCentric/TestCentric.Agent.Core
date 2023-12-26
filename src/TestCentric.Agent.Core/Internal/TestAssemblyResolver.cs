@@ -14,31 +14,24 @@ using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
-using Microsoft.Win32;
 
 namespace TestCentric.Engine.Internal
 {
     internal sealed class TestAssemblyResolver : IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("TestAssemblyResolver");
+        private static readonly Logger log = InternalTrace.GetLogger(nameof(TestAssemblyResolver));
 
         private readonly ICompilationAssemblyResolver _assemblyResolver;
         private readonly DependencyContext _dependencyContext;
         private readonly AssemblyLoadContext _loadContext;
 
-        private static readonly string INSTALL_DIR = GetDotNetInstallDirectory();
-        private static readonly string WINDOWS_DESKTOP_DIR = Path.Combine(INSTALL_DIR, "shared", "Microsoft.WindowsDesktop.App");
-        private static readonly string ASP_NET_CORE_DIR = Path.Combine(INSTALL_DIR, "shared", "Microsoft.AspNetCore.App");
-        private static readonly List<string> AdditionalFrameworkDirectories;
-
-        static TestAssemblyResolver()
-        {
-            AdditionalFrameworkDirectories = new List<string>();
-            if (Directory.Exists(WINDOWS_DESKTOP_DIR))
-                AdditionalFrameworkDirectories.Add(WINDOWS_DESKTOP_DIR);
-            if (Directory.Exists(ASP_NET_CORE_DIR))
-                AdditionalFrameworkDirectories.Add(ASP_NET_CORE_DIR);
-        }
+        //private static readonly string NET_CORE_RUNTIME = "Microsoft.NETCore.App";
+        private static readonly string WINDOWS_DESKTOP_RUNTIME = "Microsoft.WindowsDesktop.App";
+        private static readonly string ASP_NET_CORE_RUNTIME = "Microsoft.AspNetCore.App";
+        
+        private static readonly string[] AdditionalRuntimes = new [] {
+            ASP_NET_CORE_RUNTIME, WINDOWS_DESKTOP_RUNTIME
+        };
 
         public TestAssemblyResolver(AssemblyLoadContext loadContext, string assemblyPath)
         {
@@ -64,6 +57,13 @@ namespace TestCentric.Engine.Internal
         {
             log.Info($"Resolving {name}");
 
+            if (TryLoadFromTrustedPlatformAssemblies(context, name, out var loadedAssembly))
+            {
+                log.Info($"  TrustedPlatformAssemblies: {loadedAssembly.Location}");
+
+                return loadedAssembly;
+            }
+
             foreach (var library in _dependencyContext.RuntimeLibraries)
             {
                 var wrapper = new CompilationLibrary(
@@ -82,21 +82,26 @@ namespace TestCentric.Engine.Internal
                 {
                     if (name.Name == Path.GetFileNameWithoutExtension(assemblyPath))
                     {
-                        log.Info($"Using {assemblyPath}");
-                        return _loadContext.LoadFromAssemblyPath(assemblyPath);
+                        loadedAssembly = _loadContext.LoadFromAssemblyPath(assemblyPath);
+                        log.Info($"  Runtime Library {library.Name}: {loadedAssembly.Location}");
+
+                        return loadedAssembly;
                     }
                 }
             }
 
-            foreach (string frameworkDirectory in AdditionalFrameworkDirectories)
+            if (name.Version == null)
+                return null;
+
+            foreach (string runtime in AdditionalRuntimes)
             {
-                var versionDir = FindBestVersionDir(frameworkDirectory, name.Version);
-                if (versionDir != null)
+                var runtimeDir = DotNetRuntimes.GetBestRuntime(runtime, name.Version).Location;
+                if (runtimeDir != null)
                 {
-                    string candidate = Path.Combine(frameworkDirectory, versionDir, name.Name + ".dll");
+                    string candidate = Path.Combine(runtimeDir, name.Name + ".dll");
                     if (File.Exists(candidate))
                     {
-                        log.Info($"Using {candidate}");
+                        log.Info($"  Runtime {runtime}: {candidate}");
                         return _loadContext.LoadFromAssemblyPath(candidate);
                     }
                 }
@@ -105,67 +110,34 @@ namespace TestCentric.Engine.Internal
             return null;
         }
 
-        private static string GetDotNetInstallDirectory()
+        private static bool TryLoadFromTrustedPlatformAssemblies(AssemblyLoadContext context, AssemblyName assemblyName, out Assembly loadedAssembly)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // https://learn.microsoft.com/en-us/dotnet/core/dependency-loading/default-probing
+            loadedAssembly = null;
+            var trustedAssemblies = System.AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") as string;
+            if (string.IsNullOrEmpty(trustedAssemblies))
             {
-                // Running on Windows so use registry
-                RegistryKey key = Environment.Is64BitProcess
-                    ? Registry.LocalMachine.OpenSubKey(@"Software\dotnet\SetUp\InstalledVersions\x64\sharedHost\")
-                    : Registry.LocalMachine.OpenSubKey(@"Software\dotnet\SetUp\InstalledVersions\x86\sharedHost\");
-                return (string)key?.GetValue("Path");
-            }
-            else
-                return "/usr/shared/dotnet/";
-        }
-
-        private static string FindBestVersionDir(string libraryDir, Version targetVersion)
-        {
-            if (targetVersion == null)
-                return null;
-
-            targetVersion = new Version(targetVersion.Major, targetVersion.Minor, targetVersion.Build);
-            Version bestVersion = new Version(0, 0);
-            string bestVersionDir = null;
-
-            foreach (var subdir in Directory.GetDirectories(libraryDir))
-            {
-                Version version;
-                if (TryGetVersionFromString(Path.GetFileName(subdir), out version))
-                    if (version >= targetVersion)
-                        if (bestVersion.Major == 0 || bestVersion > version)
-                        {
-                            bestVersion = version;
-                            bestVersionDir = subdir;
-                        }
-            }
-
-            return bestVersionDir;
-        }
-
-        private static bool TryGetVersionFromString(string text, out Version newVersion)
-        {
-            const string VERSION_CHARS = ".0123456789";
-
-            int len = 0;
-            foreach (char c in text)
-            {
-                if (VERSION_CHARS.IndexOf(c) >= 0)
-                    len++;
-                else
-                    break;
-            }
-
-            try
-            {
-                newVersion = new Version(text.Substring(0, len));
-                return true;
-            }
-            catch
-            {
-                newVersion = new Version();
                 return false;
             }
+
+            //log.Debug($"Trusted Platform Assemblies: {trustedAssemblies}");
+            var separator = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ";" : ":";
+            foreach (var assemblyPath in trustedAssemblies.Split(separator))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(assemblyPath);
+                if (string.Equals(fileName, assemblyName.Name, StringComparison.InvariantCultureIgnoreCase) == false)
+                {
+                    continue;
+                }
+
+                if (File.Exists(assemblyPath))
+                {
+                    loadedAssembly = context.LoadFromAssemblyPath(assemblyPath);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
