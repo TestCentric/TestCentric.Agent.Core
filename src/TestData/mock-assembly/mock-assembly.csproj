@@ -2,12 +2,12 @@
   
   <PropertyGroup>
     <RootNamespace>TestCentric.Tests</RootNamespace>
-    <TargetFrameworks>net35;net462;netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net35;net462;netcoreapp3.1;net6.0;net7.0;net8.0</TargetFrameworks>
 	<CheckEolTargetFramework>false</CheckEolTargetFramework>
-	<OutputPath>..\..\..\bin\$(Configuration)\engine-tests\</OutputPath>
+	<OutputPath>..\..\..\bin\$(Configuration)\mock-assembly\</OutputPath>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\testcentric.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\testcentric.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <!-- Properties used in generating AssemblyInfo.cs for this project -->

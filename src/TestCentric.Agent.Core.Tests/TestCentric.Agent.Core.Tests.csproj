@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <RootNamespace>TestCentric.Agent</RootNamespace>
         <TargetFrameworks>net35;net462;netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
-        <RootNamespace>TestCentric.Agents</RootNamespace>
         <OutputType>Exe</OutputType>
+		<OutputPath>..\..\bin\$(Configuration)\agent-core-tests\</OutputPath>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
@@ -33,8 +35,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
+		<ProjectReference Include="..\TestData\mock-assembly\mock-assembly.csproj" />
 		<ProjectReference Include="..\TestCentric.Agent.Core\TestCentric.Agent.Core.csproj" />
+		<ProjectReference Include="..\DirectTestAgent\DirectTestAgent.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
