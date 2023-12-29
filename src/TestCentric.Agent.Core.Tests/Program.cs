@@ -11,6 +11,7 @@ namespace TestCentric.agents
     {
         static int Main(string[] args)
         {
+            InternalTrace.Initialize(null, InternalTraceLevel.Off);
             return new AutoRun().Execute(args);
         }
     }
