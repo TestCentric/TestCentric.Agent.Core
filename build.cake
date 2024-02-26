@@ -1,5 +1,5 @@
 // Load the recipe
-#load nuget:?package=TestCentric.Cake.Recipe&version=1.1.0-dev00082
+#load nuget:?package=TestCentric.Cake.Recipe&version=1.1.1
 // Comment out above line and uncomment below for local tests of recipe changes
 //#load ../TestCentric.Cake.Recipe/recipe/*.cake
 
@@ -120,7 +120,7 @@ BuildSettings.Packages.Add(new NuGetPackage(
 		HasDirectory("lib/netcoreapp3.1").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/net6.0").WithFiles("TestCentric.Agent.Core.dll"),
 		HasDirectory("lib/net8.0").WithFiles("TestCentric.Agent.Core.dll"),
-		HasDependency(PackageReference.InternalTrace)
+		HasDependency("TestCentric.InternalTrace", "1.2.0")
 			.WithFiles("lib/net20/TestCentric.InternalTrace.dll",
 					   "lib/net462/TestCentric.InternalTrace.dll",
 					   "lib/netstandard2.0/TestCentric.InternalTrace.dll"),
@@ -175,23 +175,7 @@ public class DirectTestAgentRunner : TestRunner
 }
 
 //////////////////////////////////////////////////////////////////////
-// TASK TARGETS
-//////////////////////////////////////////////////////////////////////
-
-Task("Appveyor")
-	.IsDependentOn("DumpSettings")
-	.IsDependentOn("Build")
-	.IsDependentOn("Test")
-	.IsDependentOn("Package")
-	.IsDependentOn("Publish")
-	.IsDependentOn("CreateDraftRelease")
-	.IsDependentOn("CreateProductionRelease");
-
-Task("Default")
-    .IsDependentOn("Build");
-
-//////////////////////////////////////////////////////////////////////
 // EXECUTION
 //////////////////////////////////////////////////////////////////////
 
-RunTarget(CommandLineOptions.Target.Value);
+Build.Run();
