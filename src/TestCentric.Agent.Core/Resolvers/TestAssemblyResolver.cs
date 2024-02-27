@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -57,9 +58,24 @@ namespace TestCentric.Engine.Internal
         {
             log.Info($"Resolving {assemblyName}");
 
-            foreach(var strategy in ResolverStrategies)
+            for (int index = 0; index < ResolverStrategies.Count; index++)
+            {
+                var strategy = ResolverStrategies[index];
+
                 if (strategy.TryLoadAssembly(context, assemblyName, out var loadedAssembly))
+                {
+                    if (index > 0)
+                    {
+                        // Simplistic approach to favoring the strategy that succeeds
+                        // by moving it to the start of the list. This is safe because
+                        // we are about to return from the method, exiting the loop.
+                        ResolverStrategies.RemoveAt(index);
+                        ResolverStrategies.Insert(0, strategy);
+                    }
+
                     return loadedAssembly;
+                }
+            }
 
             return null;
         }

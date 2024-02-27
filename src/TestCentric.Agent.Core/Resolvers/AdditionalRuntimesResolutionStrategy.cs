@@ -30,9 +30,13 @@ namespace TestCentric.Engine.Internal
             {
                 string candidate = Path.Combine(runtimeDir, assemblyName.Name + ".dll");
                 if (File.Exists(candidate))
+                {
+                    log.Debug($"{RuntimeName} Resolved to {candidate}");
                     return LoadContext.LoadFromAssemblyPath(candidate);
+                }
             }
 
+            log.Debug($"{RuntimeName} Failed!");
             return null;
         } 
     }

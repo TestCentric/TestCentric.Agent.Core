@@ -17,7 +17,7 @@ namespace TestCentric.Engine.Internal
 {
     internal class RuntimeLibraryResolutionStrategy : ResolutionStrategy
     {
-        private static readonly Logger log = InternalTrace.GetLogger(nameof(AdditionalRuntimesResolutionStrategy));
+        private static readonly Logger log = InternalTrace.GetLogger(nameof(RuntimeLibraryResolutionStrategy));
 
         private List<CompilationLibrary> _libraries = new List<CompilationLibrary>();
 
@@ -54,10 +54,14 @@ namespace TestCentric.Engine.Internal
                 foreach (var assemblyPath in assemblies)
                 {
                     if (assemblyName.Name == Path.GetFileNameWithoutExtension(assemblyPath))
+                    {
+                        log.Debug($"Resolved to {assemblyPath}");
                         return LoadContext.LoadFromAssemblyPath(assemblyPath);
+                    }
                 }
             }
 
+            log.Debug("Failed!");
             return null;
         }
     }

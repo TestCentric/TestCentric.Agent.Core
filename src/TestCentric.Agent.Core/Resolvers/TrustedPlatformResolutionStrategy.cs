@@ -38,9 +38,13 @@ namespace TestCentric.Engine.Internal
             {
                 var fileName = Path.GetFileNameWithoutExtension(assemblyPath);
                 if (string.Equals(fileName, assemblyName.Name, StringComparison.InvariantCultureIgnoreCase) && File.Exists(assemblyPath))
+                {
+                    log.Debug($"Resolved to {assemblyPath}");
                     return context.LoadFromAssemblyPath(assemblyPath);
+                }
             }
 
+            log.Debug("Failed!");
             return null;
         }
     }
