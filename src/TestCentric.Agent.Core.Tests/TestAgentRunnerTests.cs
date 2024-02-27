@@ -52,7 +52,7 @@ namespace TestCentric.Engine.Runners
         [Test]
         public void CountTestCases()
         {
-        int count = _runner.CountTestCases(TestFilter.Empty);
+            int count = _runner.CountTestCases(TestFilter.Empty);
             Assert.That(count, Is.EqualTo(MockAssembly.Tests));
             CheckPackageLoading();
         }

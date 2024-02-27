@@ -17,15 +17,17 @@ namespace TestCentric.Engine.Internal
     {
         private static readonly Logger log = InternalTrace.GetLogger(nameof(TestAssemblyLoadContext));
 
-        private readonly string _testAssemblyPath;
+        internal readonly string _testAssemblyPath;
         private readonly string _basePath;
-        private readonly TestAssemblyResolver _resolver;
+
+        public TestAssemblyResolver Resolver { get; }
 
         public TestAssemblyLoadContext(string testAssemblyPath)
         {
             _testAssemblyPath = testAssemblyPath;
-            _resolver = new TestAssemblyResolver(this, testAssemblyPath);
             _basePath = Path.GetDirectoryName(testAssemblyPath);
+
+            Resolver = new TestAssemblyResolver(this, testAssemblyPath);
         }
 
         protected override Assembly Load(AssemblyName name)
