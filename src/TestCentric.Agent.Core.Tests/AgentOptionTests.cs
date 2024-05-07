@@ -26,7 +26,7 @@ namespace TestCentric.Agents
         {
             var options = new AgentOptions();
             var prop = typeof(AgentOptions).GetProperty(propertyName);
-            Assert.NotNull(prop, $"Property {propertyName} does not exist");
+            Assert.That(prop, Is.Not.Null, $"Property {propertyName} does not exist");
             Assert.That(prop.GetValue(options, new object[0]), Is.EqualTo(defaultValue));
         }
 
@@ -54,7 +54,7 @@ namespace TestCentric.Agents
         {
             var options = new AgentOptions(option);
             var prop = typeof(AgentOptions).GetProperty(propertyName);
-            Assert.NotNull(prop, $"Property {propertyName} does not exist");
+            Assert.That(prop, Is.Not.Null, $"Property {propertyName} does not exist");
             Assert.That(prop.GetValue(options, new object[0]), Is.EqualTo(expectedValue));
         }
 
@@ -62,8 +62,8 @@ namespace TestCentric.Agents
         public void MultipleOptions()
         {
             var options = new AgentOptions("--debug-tests", "--trace=Info", "--work", "MYWORKDIR");
-            Assert.False(options.DebugAgent);
-            Assert.True(options.DebugTests);
+            Assert.That(options.DebugAgent, Is.False);
+            Assert.That(options.DebugTests);
             Assert.That(options.TraceLevel, Is.EqualTo(InternalTraceLevel.Info));
             Assert.That(options.WorkDirectory, Is.EqualTo("MYWORKDIR"));
         }

@@ -28,9 +28,9 @@ namespace TestCentric.Engine.Internal
             var filter = new TestFilter("<filter/>");
             Assert.Multiple(() =>
             {
-                Assert.False(filter.Excludes(ASSEMBLY1_PACKAGE), "Assembly1 should be included");
-                Assert.False(filter.Excludes(ASSEMBLY2_PACKAGE), "Assembly2 should be included");
-                Assert.False(filter.Excludes(PROJECT_PACKAGE), "MyProject.nunit should be included");
+                Assert.That(filter.Excludes(ASSEMBLY1_PACKAGE), Is.False, "Assembly1 should be included");
+                Assert.That(filter.Excludes(ASSEMBLY2_PACKAGE), Is.False, "Assembly2 should be included");
+                Assert.That(filter.Excludes(PROJECT_PACKAGE), Is.False, "MyProject.nunit should be included");
             });
         }
 
@@ -38,7 +38,7 @@ namespace TestCentric.Engine.Internal
         public void SingleIdFilter_SameAssembly_IsIncluded()
         {
             TestFilter filter = new TestFilter($"<filter><id>{ASSEMBLY1_ID}-123</id></filter>");
-            Assert.False(filter.Excludes(ASSEMBLY1_PACKAGE));
+            Assert.That(filter.Excludes(ASSEMBLY1_PACKAGE), Is.False);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace TestCentric.Engine.Internal
         public void MultipleIdFilters_SameAssembly_IsIncluded()
         {
             TestFilter filter = new TestFilter($"<filter><or><id>{ASSEMBLY1_ID}-123</id><id>{ASSEMBLY1_ID}-456</id><id>{ASSEMBLY1_ID}-789</id></or></filter>");
-            Assert.False(filter.Excludes(ASSEMBLY1_PACKAGE));
+            Assert.That(filter.Excludes(ASSEMBLY1_PACKAGE), Is.False);
         }
 
         [Test]
@@ -69,8 +69,8 @@ namespace TestCentric.Engine.Internal
 
             Assert.Multiple(() =>
             {
-                Assert.False(filter.Excludes(ASSEMBLY1_PACKAGE), "Assembly1 should be included");
-                Assert.False(filter.Excludes(ASSEMBLY2_PACKAGE), "Assembly2 should be included");
+                Assert.That(filter.Excludes(ASSEMBLY1_PACKAGE), Is.False, "Assembly1 should be included");
+                Assert.That(filter.Excludes(ASSEMBLY2_PACKAGE), Is.False, "Assembly2 should be included");
             });
         }
 
@@ -78,7 +78,7 @@ namespace TestCentric.Engine.Internal
         public void CategoryFilter_IsIncluded()
         {
             var filter = new TestFilter("<filter><cat>SomeCategory</cat></filter>");
-            Assert.False(filter.Excludes(ASSEMBLY1_PACKAGE));
+            Assert.That(filter.Excludes(ASSEMBLY1_PACKAGE), Is.False);
         }
 
         [Test]
@@ -88,8 +88,8 @@ namespace TestCentric.Engine.Internal
 
             Assert.Multiple(() =>
             {
-                Assert.False(filter.Excludes(ASSEMBLY1_PACKAGE), "Assembly1 should be included");
-                Assert.False(filter.Excludes(ASSEMBLY2_PACKAGE), "Assembly2 should be included");
+                Assert.That(filter.Excludes(ASSEMBLY1_PACKAGE), Is.False, "Assembly1 should be included");
+                Assert.That(filter.Excludes(ASSEMBLY2_PACKAGE), Is.False, "Assembly2 should be included");
             });
 
         }

@@ -21,7 +21,8 @@ namespace TestCentric.Engine.Drivers
         /// <param name="reference">An AssemblyName referring to the possible test framework.</param>
         public bool IsSupportedTestFramework(AssemblyName reference)
         {
-            return NUNIT_FRAMEWORK.Equals(reference.Name, StringComparison.OrdinalIgnoreCase) && reference.Version.Major == 3;
+            // The driver actually supports version 4 as well as 3 of NUnit
+            return NUNIT_FRAMEWORK.Equals(reference.Name, StringComparison.OrdinalIgnoreCase) && reference.Version.Major >= 3;
         }
 
 #if NETFRAMEWORK
