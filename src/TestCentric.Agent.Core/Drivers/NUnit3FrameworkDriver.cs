@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization;
 using TestCentric.Engine.Extensibility;
+using TestCentric.Metadata;
 
 namespace TestCentric.Engine.Drivers
 {
@@ -20,6 +20,9 @@ namespace TestCentric.Engine.Drivers
     public class NUnit3FrameworkDriver : IFrameworkDriver
     {
         private const string LOAD_MESSAGE = "Method called without calling Load first";
+        const string INVALID_FRAMEWORK_MESSAGE = "Running tests against this version of the framework using this driver is not supported. Please update NUnit.Framework to the latest version.";
+        const string FAILED_TO_LOAD_TEST_ASSEMBLY = "Failed to load the test assembly {0}";
+        const string FAILED_TO_LOAD_NUNIT = "Failed to load the NUnit Framework in the test assembly";
 
         private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
@@ -30,22 +33,10 @@ namespace TestCentric.Engine.Drivers
 
         static Logger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
-        AppDomain _testDomain;
-        AssemblyName _reference;
         string _testAssemblyPath;
-
+        Assembly _testAssembly;
+        Assembly _frameworkAssembly;
         object _frameworkController;
-
-        /// <summary>
-        /// Construct an NUnit3FrameworkDriver
-        /// </summary>
-        /// <param name="testDomain">The application domain in which to create the FrameworkController</param>
-        /// <param name="reference">An AssemblyName referring to the test framework.</param>
-        public NUnit3FrameworkDriver(AppDomain testDomain, AssemblyName reference)
-        {
-            _testDomain = testDomain;
-            _reference = reference;
-        }
 
         public string ID { get; set; }
 
@@ -58,24 +49,40 @@ namespace TestCentric.Engine.Drivers
             Guard.ArgumentValid(File.Exists(testAssemblyPath), "Framework driver constructor called with a file name that doesn't exist.", "testAssemblyPath");
 
             var idPrefix = string.IsNullOrEmpty(ID) ? "" : ID + "-";
+
             _testAssemblyPath = testAssemblyPath;
-            try
-            {
-                _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, idPrefix, settings);
-            }
-            catch (SerializationException ex)
-            {
-                throw new EngineException("The NUnit 3 driver cannot support this test assembly. Use a platform specific runner.", ex);
-            }
+            var assemblyRef = AssemblyDefinition.ReadAssembly(testAssemblyPath);
+            _testAssembly = Assembly.LoadFrom(testAssemblyPath);
+            if (_testAssembly == null)
+                throw new EngineException(string.Format(FAILED_TO_LOAD_TEST_ASSEMBLY, assemblyRef.FullName));
+
+            // NOTE: We could use Linq here, but would still need the loop for NET20
+            AssemblyNameReference nunitRef = null;
+            foreach (var reference in assemblyRef.MainModule.AssemblyReferences)
+                if (reference.Name.Equals("nunit.framework", StringComparison.OrdinalIgnoreCase))
+                {
+                    nunitRef = reference;
+                    break;
+                }
+
+            if (nunitRef == null)
+                throw new EngineException(FAILED_TO_LOAD_NUNIT);
+
+            var nunit = Assembly.LoadFrom(Path.Combine(Path.GetDirectoryName(testAssemblyPath), nunitRef.Name + ".dll"));
+            if (nunit == null)
+                throw new EngineException(FAILED_TO_LOAD_NUNIT);
+
+            _frameworkAssembly = nunit;
+
+            _frameworkController = CreateObject(CONTROLLER_TYPE, _testAssembly, idPrefix, settings);
+            if (_frameworkController == null)
+                throw new EngineException(INVALID_FRAMEWORK_MESSAGE);
 
             CallbackHandler handler = new CallbackHandler();
 
             var fileName = Path.GetFileName(_testAssemblyPath);
-
             log.Info("Loading {0} - see separate log file", fileName);
-
             CreateObject(LOAD_ACTION, _frameworkController, handler);
-
             log.Info("Loaded {0}", fileName);
 
             return handler.Result;
@@ -84,11 +91,8 @@ namespace TestCentric.Engine.Drivers
         public int CountTestCases(string filter)
         {
             CheckLoadWasCalled();
-
             CallbackHandler handler = new CallbackHandler();
-
             CreateObject(COUNT_ACTION, _frameworkController, filter, handler);
-
             return int.Parse(handler.Result);
         }
 
@@ -104,11 +108,8 @@ namespace TestCentric.Engine.Drivers
 
             var handler = new RunTestsCallbackHandler(listener);
             var filename = Path.GetFileName(_testAssemblyPath);
-
             log.Info("Running {0} - see separate log file", filename);
-
             CreateObject(RUN_ACTION, _frameworkController, filter, handler);
-
             return handler.Result;
         }
 
@@ -137,12 +138,9 @@ namespace TestCentric.Engine.Drivers
         public string Explore(string filter)
         {
             CheckLoadWasCalled();
-
-            CallbackHandler handler = new CallbackHandler();
-
             log.Info("Exploring {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
+            CallbackHandler handler = new CallbackHandler();
             CreateObject(EXPLORE_ACTION, _frameworkController, filter, handler);
-
             return handler.Result;
         }
 
@@ -154,20 +152,10 @@ namespace TestCentric.Engine.Drivers
 
         private object CreateObject(string typeName, params object[] args)
         {
-            try
-            {
-                return _testDomain.CreateInstanceAndUnwrap(
-                    _reference.FullName, typeName, false, 0,
-#if NET20
-                    null, args, null, null, null);
-#else
-                null, args, null, null );
-#endif
-            }
-            catch (TargetInvocationException ex)
-            {
-                throw new EngineException("The NUnit 3 driver encountered an error while executing reflected code.", ex.InnerException);
-            }
+            var type = _frameworkAssembly.GetType(typeName);
+            if (type == null)
+                log.Error("Could not find type {typeName}");
+            return Activator.CreateInstance(type, args);
         }
     }
 }
