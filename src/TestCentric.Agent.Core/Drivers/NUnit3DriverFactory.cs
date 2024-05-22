@@ -33,11 +33,12 @@ namespace TestCentric.Engine.Drivers
         /// <param name="domain">The domain in which the assembly will be loaded</param>
         /// <param name="reference">An AssemblyName referring to the test framework.</param>
         /// <returns></returns>
+        // TODO: Remove this overload after engine api is updated
         public IFrameworkDriver GetDriver(AppDomain domain, AssemblyName reference)
         {
             Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework", "reference");
 
-            return new NUnit3FrameworkDriver(domain, reference);
+            return new NUnit3FrameworkDriver();
         }
 #else
         /// <summary>
@@ -59,5 +60,5 @@ namespace TestCentric.Engine.Drivers
 #endif
         }
 #endif
-    }
+        }
 }
