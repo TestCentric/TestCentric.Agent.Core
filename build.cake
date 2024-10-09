@@ -1,5 +1,5 @@
 // Load the recipe
-#load nuget:?package=TestCentric.Cake.Recipe&version=1.2.1-dev00008
+#load nuget:?package=TestCentric.Cake.Recipe&version=1.3.2
 // Comment out above line and uncomment below for local tests of recipe changes
 //#load ../TestCentric.Cake.Recipe/recipe/*.cake
 
@@ -8,7 +8,6 @@ BuildSettings.Initialize
 	context: Context,
 	title: "TestCentric Agent Core",
 	solutionFile: "TestCentric.Agent.Core.sln",
-	unitTests: "**/*.tests.exe",
 	githubOwner: "TestCentric",
 	githubRepository: "TestCentric.Agent.Core"
 );
@@ -133,9 +132,9 @@ BuildSettings.Packages.Add(new NuGetPackage(
 // TEST BED RUNNER
 //////////////////////////////////////////////////////////////////////
 
-public class DirectTestAgentRunner : TestRunner
+public class DirectTestAgentRunner : TestRunner, IPackageTestRunner
 {
-	public override int Run(string arguments)
+	public int RunPackageTest(string arguments)
 	{
 		// First argument must be relative path to a test assembly.
 		// It's immediate directory name is the name of the runtime.
@@ -159,14 +158,14 @@ public class DirectTestAgentRunner : TestRunner
 		else if (agentRuntime == "net5.0")
 			agentRuntime = "net6.0";
 
-		ExecutablePath = BuildSettings.OutputDirectory + $"direct-test-agent/{agentRuntime}/DirectTestAgent.exe";
+		var executablePath = BuildSettings.OutputDirectory + $"direct-test-agent/{agentRuntime}/DirectTestAgent.exe";
 
-		if (!System.IO.File.Exists(ExecutablePath))
-			throw new FileNotFoundException($"File not found: {ExecutablePath}");
+		if (!System.IO.File.Exists(executablePath))
+			throw new FileNotFoundException($"File not found: {executablePath}");
 
-        Console.WriteLine($"Trying to run {ExecutablePath} with arguments {arguments}");
+        Console.WriteLine($"Trying to run {executablePath} with arguments {arguments}");
 
-		return BuildSettings.Context.StartProcess(ExecutablePath, new ProcessSettings()
+		return BuildSettings.Context.StartProcess(executablePath, new ProcessSettings()
 		{
 			Arguments = arguments,
 			WorkingDirectory = BuildSettings.OutputDirectory
