@@ -28,15 +28,7 @@ namespace TestCentric.Engine.Drivers
         {
             log.Debug("Creating ExtensionManager");
             var thisAssembly = Assembly.GetExecutingAssembly();
-            var extensionManager = new ExtensionManager(thisAssembly) {
-                DefaultTypeExtensionPrefix = "/TestCentric/Engine/TypeExtensions/",
-                InitialAddinsDirectory = Path.GetDirectoryName(thisAssembly.Location)
-                //InternalTraceLevel = InternalTrace.TraceLevel,
-                //WorkDirectory = Environment.CurrentDirectory
-            };
-
-            log.Debug($"Initializing ExtensionManager");
-            extensionManager.Initialize();
+            var extensionManager = new ExtensionManager("/TestCentric/Engine/TypeExtensions/");
 
             foreach (IDriverFactory factory in extensionManager.GetExtensions<IDriverFactory>())
                 _factories.Add(factory);

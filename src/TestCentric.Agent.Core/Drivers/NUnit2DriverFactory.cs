@@ -16,13 +16,13 @@ namespace TestCentric.Engine.Drivers
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";
         private const string NUNITLITE_FRAMEWORK = "nunitlite";
-        private ExtensionNode _driverNode;
+        private IExtensionNode _driverNode;
 
         // TODO: This should be a central service but for now it's local
         private ProvidedPathsAssemblyResolver _resolver;
         bool _resolverInstalled;
 
-        public NUnit2DriverFactory(ExtensionNode driverNode)
+        public NUnit2DriverFactory(IExtensionNode driverNode)
         {
             _driverNode = driverNode;
             _resolver = new ProvidedPathsAssemblyResolver();
@@ -58,7 +58,14 @@ namespace TestCentric.Engine.Drivers
                 _resolver.AddPathFromFile(_driverNode.AssemblyPath);
             }
 
-            return _driverNode.CreateExtensionObject(domain) as IFrameworkDriver;
+            return AppDomain.CurrentDomain.CreateInstanceFromAndUnwrap(
+                _driverNode.AssemblyPath, _driverNode.TypeName,
+#if NET20
+            false, 0, null, new[] { domain }, null, null, null) as IFrameworkDriver;
+#else
+            false, 0, null, new[] { domain }, null, null) as IFrameworkDriver;
+#endif
+            //return _driverNode.CreateExtensionObject(domain) as IFrameworkDriver;
         }
     }
 }
