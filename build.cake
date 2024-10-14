@@ -1,5 +1,5 @@
 // Load the recipe
-#load nuget:?package=TestCentric.Cake.Recipe&version=1.3.2
+#load nuget:?package=TestCentric.Cake.Recipe&version=1.3.3
 // Comment out above line and uncomment below for local tests of recipe changes
 //#load ../TestCentric.Cake.Recipe/recipe/*.cake
 
@@ -36,9 +36,10 @@ packageTests.Add(new PackageTest(1, "Net462Test", "Run mock-assembly.dll targeti
     "mock-assembly/net462/mock-assembly.dll",
     mockAssemblyExpectedResult));
 
-packageTests.Add(new PackageTest(1, "NetCore31Test", "Run mock-assembly.dll targeting .NET Core 3.1",
-    "mock-assembly/netcoreapp3.1/mock-assembly.dll",
-    mockAssemblyExpectedResult));
+if (BuildSettings.IsLocalBuild)
+	packageTests.Add(new PackageTest(1, "NetCore31Test", "Run mock-assembly.dll targeting .NET Core 3.1",
+		"mock-assembly/netcoreapp3.1/mock-assembly.dll",
+		mockAssemblyExpectedResult));
 
 packageTests.Add(new PackageTest(1, "Net60Test", "Run mock-assembly.dll targeting .NET 6.0",
     "mock-assembly/net6.0/mock-assembly.dll",
@@ -50,10 +51,11 @@ packageTests.Add(new PackageTest(1, "Net80Test", "Run mock-assembly.dll targetin
 
 // Asp .NET Core Tests
 
-packageTests.Add(new PackageTest(1, "AspNetCore31Test", "Run test using AspNetCore under .NET Core 3.1",
-    "aspnetcore-test/netcoreapp3.1/aspnetcore-test.dll",
-    new ExpectedResult("Passed"){ Assemblies = new ExpectedAssemblyResult[] {
-		new ExpectedAssemblyResult("aspnetcore-test.dll")} }));
+if (BuildSettings.IsLocalBuild)
+	packageTests.Add(new PackageTest(1, "AspNetCore31Test", "Run test using AspNetCore under .NET Core 3.1",
+		"aspnetcore-test/netcoreapp3.1/aspnetcore-test.dll",
+		new ExpectedResult("Passed"){ Assemblies = new ExpectedAssemblyResult[] {
+			new ExpectedAssemblyResult("aspnetcore-test.dll")} }));
 
 packageTests.Add(new PackageTest(1, "AspNetCore50Test", "Run test using AspNetCore under .NET 5.0",
     "aspnetcore-test/net5.0/aspnetcore-test.dll",
