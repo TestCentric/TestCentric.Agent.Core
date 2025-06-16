@@ -43,6 +43,9 @@ namespace TestCentric.Engine.Drivers
         Type _frameworkControllerType;
         TestAssemblyLoadContext _assemblyLoadContext;
 
+        private string assemblyPath;
+        private IDictionary<string, object> settings;
+
         /// <summary>
         /// An id prefix that will be passed to the test framework and used as part of the
         /// test ids created.
@@ -57,10 +60,16 @@ namespace TestCentric.Engine.Drivers
         /// <returns>An XML string representing the loaded test</returns>
         public string Load(string assemblyPath, IDictionary<string, object> settings)
         {
+            this.assemblyPath = Path.GetFullPath(assemblyPath);  //AssemblyLoadContext requires an absolute path
+            this.settings = settings;
+            return LoadAssemblyIntoContext();
+        }
+
+        private string LoadAssemblyIntoContext()
+        { 
             log.Debug($"Loading {assemblyPath}");
             var idPrefix = string.IsNullOrEmpty(ID) ? "" : ID + "-";
 
-            assemblyPath = Path.GetFullPath(assemblyPath);  //AssemblyLoadContext requires an absolute path
             _assemblyLoadContext = new TestAssemblyLoadContext(assemblyPath);
 
             try
@@ -114,8 +123,9 @@ namespace TestCentric.Engine.Drivers
         /// <returns>The number of test cases</returns>
         public int CountTestCases(string filter)
         {
-            CheckLoadWasCalled();
+            LoadAssemblyIntoContext();
             object count = ExecuteMethod(COUNT_METHOD, filter);
+            UnloadAssemblyContext();
             return count != null ? (int)count : 0;
         }
 
@@ -127,10 +137,14 @@ namespace TestCentric.Engine.Drivers
         /// <returns>An Xml string representing the result</returns>
         public string Run(ITestEventListener listener, string filter)
         {
-            CheckLoadWasCalled();
+            LoadAssemblyIntoContext();
+
             log.Info("Running {0} - see separate log file", _testAssembly.FullName);
             Action<string> callback = listener != null ? listener.OnTestEvent : (Action<string>)null;
-            return ExecuteMethod(RUN_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter) as string;
+            var result = ExecuteMethod(RUN_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter) as string;
+
+            UnloadAssemblyContext();
+            return result;
         }
 
         /// <summary>
@@ -140,9 +154,11 @@ namespace TestCentric.Engine.Drivers
         /// <param name="filter">A filter that controls which tests are executed</param>
         public void RunAsync(Action<string> callback, string filter)
         {
-            CheckLoadWasCalled();
+            LoadAssemblyIntoContext();
+
             log.Info("Running {0} - see separate log file", _testAssembly.FullName);
             ExecuteMethod(RUN_ASYNC_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter);
+            UnloadAssemblyContext();
         }
 
         /// <summary>
@@ -163,14 +179,27 @@ namespace TestCentric.Engine.Drivers
         {
             CheckLoadWasCalled();
 
-            log.Info("Exploring {0} - see separate log file", _testAssembly.FullName);
-            return ExecuteMethod(EXPLORE_METHOD, filter) as string;
+            log.Info("Exploring {0} - see separate log file", _testAssembly?.FullName);
+            var result = ExecuteMethod(EXPLORE_METHOD, filter) as string;
+            UnloadAssemblyContext();
+
+            return result;
         }
 
         void CheckLoadWasCalled()
         {
             if (_frameworkController == null)
                 throw new InvalidOperationException(LOAD_MESSAGE);
+        }
+
+        private void UnloadAssemblyContext()
+        {
+            _frameworkController = null;
+            _frameworkAssembly = null;
+            _frameworkControllerType = null;
+            _testAssembly = null;
+            _assemblyLoadContext?.Unload();
+            _assemblyLoadContext = null;
         }
 
         object CreateObject(string typeName, params object[] args)

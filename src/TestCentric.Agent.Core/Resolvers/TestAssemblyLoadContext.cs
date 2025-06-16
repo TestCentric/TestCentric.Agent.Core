@@ -23,6 +23,7 @@ namespace TestCentric.Engine.Internal
         public TestAssemblyResolver Resolver { get; }
 
         public TestAssemblyLoadContext(string testAssemblyPath)
+            : base(isCollectible: true)
         {
             _testAssemblyPath = testAssemblyPath;
             _basePath = Path.GetDirectoryName(testAssemblyPath);
