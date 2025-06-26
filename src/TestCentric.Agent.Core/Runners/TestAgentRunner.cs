@@ -158,6 +158,11 @@ namespace TestCentric.Engine.Runners
             {
                 throw new EngineException("An exception occurred in the driver while exploring tests.", ex);
             }
+            finally
+            {
+                RunGarbageCollector();
+            }
+
         }
 
         /// <summary>
@@ -177,6 +182,10 @@ namespace TestCentric.Engine.Runners
             catch (Exception ex) when (!(ex is EngineException))
             {
                 throw new EngineException("An exception occurred in the driver while counting test cases.", ex);
+            }
+            finally
+            {
+                RunGarbageCollector();
             }
         }
 
@@ -274,6 +283,10 @@ namespace TestCentric.Engine.Runners
                     log.Debug("An exception occurred in the driver while running tests.", ex);
                     throw new EngineException("An exception occurred in the driver while running tests.", ex);
                 }
+                finally
+                {
+                    RunGarbageCollector();
+                }
 
             if (_assemblyResolver != null)
                 _assemblyResolver.RemovePathFromFile(TestPackage.FullName);
@@ -303,6 +316,18 @@ namespace TestCentric.Engine.Runners
                     Unload();
 
                 _disposed = true;
+            }
+        }
+
+        /// <summary>
+        /// This garbage collector call is required for the unloading of a AssemblyLoadContext
+        /// </summary>
+        private static void RunGarbageCollector()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
         }
     }

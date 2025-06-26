@@ -43,6 +43,9 @@ namespace TestCentric.Engine.Drivers
         Type _frameworkControllerType;
         TestAssemblyLoadContext _assemblyLoadContext;
 
+        private string _testAssemblyPath;
+        private IDictionary<string, object> _testSettings;
+
         /// <summary>
         /// An id prefix that will be passed to the test framework and used as part of the
         /// test ids created.
@@ -57,23 +60,29 @@ namespace TestCentric.Engine.Drivers
         /// <returns>An XML string representing the loaded test</returns>
         public string Load(string assemblyPath, IDictionary<string, object> settings)
         {
-            log.Debug($"Loading {assemblyPath}");
+            _testAssemblyPath = Path.GetFullPath(assemblyPath);  //AssemblyLoadContext requires an absolute path
+            _testSettings = settings;
+            return CreateTestAssemblyContext();
+        }
+
+        private string CreateTestAssemblyContext()
+        { 
+            log.Debug($"Loading {_testAssemblyPath}");
             var idPrefix = string.IsNullOrEmpty(ID) ? "" : ID + "-";
 
-            assemblyPath = Path.GetFullPath(assemblyPath);  //AssemblyLoadContext requires an absolute path
-            _assemblyLoadContext = new TestAssemblyLoadContext(assemblyPath);
+            _assemblyLoadContext = new TestAssemblyLoadContext(_testAssemblyPath);
 
             try
             {
-                _testAssembly = _assemblyLoadContext.LoadFromAssemblyPath(assemblyPath);
+                _testAssembly = _assemblyLoadContext.LoadFromAssemblyPath(_testAssemblyPath);
             }
             catch (Exception e)
             {
-                var msg = string.Format(FAILED_TO_LOAD_TEST_ASSEMBLY, assemblyPath);
+                var msg = string.Format(FAILED_TO_LOAD_TEST_ASSEMBLY, _testAssemblyPath);
                 log.Error(msg);
                 throw new EngineException(msg, e);
             }
-            log.Debug($"Loaded {assemblyPath}");
+            log.Debug($"Loaded {_testAssemblyPath}");
 
             var nunitRef = _testAssembly.GetReferencedAssemblies().FirstOrDefault(reference => reference.Name.Equals("nunit.framework", StringComparison.OrdinalIgnoreCase));
             if (nunitRef == null)
@@ -93,7 +102,7 @@ namespace TestCentric.Engine.Drivers
             }
             log.Debug("Loaded nunit.framework");
 
-            _frameworkController = CreateObject(CONTROLLER_TYPE, _testAssembly, idPrefix, settings);
+            _frameworkController = CreateObject(CONTROLLER_TYPE, _testAssembly, idPrefix, _testSettings);
             if (_frameworkController == null)
             {
                 log.Error(INVALID_FRAMEWORK_MESSAGE);
@@ -114,8 +123,9 @@ namespace TestCentric.Engine.Drivers
         /// <returns>The number of test cases</returns>
         public int CountTestCases(string filter)
         {
-            CheckLoadWasCalled();
+            CreateTestAssemblyContext();
             object count = ExecuteMethod(COUNT_METHOD, filter);
+            UnloadAssemblyContext();
             return count != null ? (int)count : 0;
         }
 
@@ -127,10 +137,14 @@ namespace TestCentric.Engine.Drivers
         /// <returns>An Xml string representing the result</returns>
         public string Run(ITestEventListener listener, string filter)
         {
-            CheckLoadWasCalled();
+            CreateTestAssemblyContext();
+
             log.Info("Running {0} - see separate log file", _testAssembly.FullName);
             Action<string> callback = listener != null ? listener.OnTestEvent : (Action<string>)null;
-            return ExecuteMethod(RUN_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter) as string;
+            var result = ExecuteMethod(RUN_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter) as string;
+
+            UnloadAssemblyContext();
+            return result;
         }
 
         /// <summary>
@@ -140,7 +154,8 @@ namespace TestCentric.Engine.Drivers
         /// <param name="filter">A filter that controls which tests are executed</param>
         public void RunAsync(Action<string> callback, string filter)
         {
-            CheckLoadWasCalled();
+            CreateTestAssemblyContext();
+
             log.Info("Running {0} - see separate log file", _testAssembly.FullName);
             ExecuteMethod(RUN_ASYNC_METHOD, new[] { typeof(Action<string>), typeof(string) }, callback, filter);
         }
@@ -163,14 +178,27 @@ namespace TestCentric.Engine.Drivers
         {
             CheckLoadWasCalled();
 
-            log.Info("Exploring {0} - see separate log file", _testAssembly.FullName);
-            return ExecuteMethod(EXPLORE_METHOD, filter) as string;
+            log.Info("Exploring {0} - see separate log file", _testAssembly?.FullName);
+            var result = ExecuteMethod(EXPLORE_METHOD, filter) as string;
+            UnloadAssemblyContext();
+
+            return result;
         }
 
         void CheckLoadWasCalled()
         {
             if (_frameworkController == null)
                 throw new InvalidOperationException(LOAD_MESSAGE);
+        }
+
+        private void UnloadAssemblyContext()
+        {
+            _frameworkController = null;
+            _frameworkAssembly = null;
+            _frameworkControllerType = null;
+            _testAssembly = null;
+            _assemblyLoadContext?.Unload();
+            _assemblyLoadContext = null;
         }
 
         object CreateObject(string typeName, params object[] args)
