@@ -38,7 +38,7 @@ namespace TestCentric.Engine.Drivers
         {
             Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework", "reference");
 
-            return new NUnit3FrameworkDriver();
+            return new NUnit3FrameworkDriver(domain, reference);
         }
 #else
         /// <summary>
