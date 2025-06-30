@@ -4,14 +4,12 @@
 // ***********************************************************************
 
 #if NETFRAMEWORK
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
 using TestCentric.Tests.Assemblies;
-using NUnit.Framework;
-using System.Reflection;
 
 namespace TestCentric.Engine.Drivers
 {
@@ -29,8 +27,9 @@ namespace TestCentric.Engine.Drivers
         [SetUp]
         public void CreateDriver()
         {
+            var assemblyName = typeof(NUnit.Framework.TestAttribute).Assembly.GetName();
             _mockAssemblyPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
-            _driver = new NUnit3FrameworkDriver();
+            _driver = new NUnit3FrameworkDriver(AppDomain.CurrentDomain, assemblyName);
         }
 
         [Test]
@@ -118,10 +117,7 @@ namespace TestCentric.Engine.Drivers
 
             var invalidFilter = "<filter><invalidElement>foo</invalidElement></filter>";
             var ex = Assert.Catch(() => _driver.Run(new NullListener(), invalidFilter));
-
-            // TODO: We should be getting an engine exception here
-            Assert.That(ex , Is.TypeOf<TargetInvocationException>());
-            //Assert.That(ex , Is.TypeOf<EngineException>());
+            Assert.That(ex , Is.TypeOf<EngineException>());
         }
 
         private static string GetSkipReason(XmlNode result)
