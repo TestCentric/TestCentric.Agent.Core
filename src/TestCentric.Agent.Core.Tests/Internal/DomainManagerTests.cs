@@ -6,6 +6,7 @@
 #if NETFRAMEWORK
 using System;
 using System.IO;
+using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Tests.Assemblies;
 
@@ -49,7 +50,7 @@ namespace TestCentric.Engine.Internal
             string basePath = Path.GetDirectoryName(Path.GetDirectoryName(assemblyDir));
             string relPath = assemblyDir.Substring(basePath.Length + 1);
 
-            _package.Settings["BasePath"] = basePath;
+            _package.Settings.Add(SettingDefinitions.BasePath.WithValue(basePath));
             var domain = _domainManager.CreateDomain(_package);
 
             Assert.That(domain, Is.Not.Null);

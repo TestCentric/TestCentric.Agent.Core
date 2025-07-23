@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Reflection;
 using System.Security.Principal;
+using NUnit.Common;
 
 namespace TestCentric.Engine.Internal
 {
@@ -51,10 +52,10 @@ namespace TestCentric.Engine.Internal
             AppDomain runnerDomain = AppDomain.CreateDomain(domainName, /*evidence*/null, setup);
 
             // Set PrincipalPolicy for the domain if called for in the package settings
-            if (package.Settings.ContainsKey(EnginePackageSettings.PrincipalPolicy))
+            if (package.Settings.HasSetting(SettingDefinitions.PrincipalPolicy))
             {
                 PrincipalPolicy policy = (PrincipalPolicy)Enum.Parse(typeof(PrincipalPolicy),
-                    package.GetSetting(EnginePackageSettings.PrincipalPolicy, "UnauthenticatedPrincipal"));
+                    package.Settings.GetValueOrDefault(SettingDefinitions.PrincipalPolicy));
 
                 runnerDomain.SetPrincipalPolicy(policy);
             }
@@ -86,13 +87,13 @@ namespace TestCentric.Engine.Internal
                 // If property is null, .NET 4.5+ is not installed, so there is no need
                 if (TargetFrameworkNameProperty != null)
                 {
-                    var frameworkName = package.GetSetting(EnginePackageSettings.ImageTargetFrameworkName, "");
+                    var frameworkName = package.Settings.GetValueOrDefault(SettingDefinitions.ImageTargetFrameworkName);
                     if (frameworkName != "")
                         TargetFrameworkNameProperty.SetValue(setup, frameworkName, null);
                 }
             }
 
-            if (package.GetSetting(EnginePackageSettings.ShadowCopyFiles, false))
+            if (package.Settings.GetValueOrDefault(SettingDefinitions.ShadowCopyFiles))
             {
                 setup.ShadowCopyFiles = "true";
                 setup.ShadowCopyDirectories = setup.ApplicationBase;
@@ -124,8 +125,8 @@ namespace TestCentric.Engine.Internal
 
             public void Unload(TestPackage package)
             {
-                _simulateUnloadError = package.GetSetting(EnginePackageSettings.SimulateUnloadError, false);
-                _simulateUnloadTimeout = package.GetSetting(EnginePackageSettings.SimulateUnloadTimeout, false);
+                _simulateUnloadError = package.Settings.GetValueOrDefault(SettingDefinitions.SimulateUnloadError);
+                _simulateUnloadTimeout = package.Settings.GetValueOrDefault(SettingDefinitions.SimulateUnloadTimeout);
 
                 _unloadThread = new Thread(new ThreadStart(UnloadOnThread));
                 _unloadThread.Start();
@@ -181,7 +182,7 @@ namespace TestCentric.Engine.Internal
         {
             Guard.ArgumentNotNull(package, "package");
 
-            var appBase = package.GetSetting(EnginePackageSettings.BasePath, string.Empty);
+            var appBase = package.Settings.GetValueOrDefault(SettingDefinitions.BasePath);
 
             if (string.IsNullOrEmpty(appBase))
                 appBase = string.IsNullOrEmpty(package.FullName)
@@ -204,7 +205,7 @@ namespace TestCentric.Engine.Internal
             Guard.ArgumentNotNull(package, "package");
 
             // Use provided setting if available
-            string configFile = package.GetSetting(EnginePackageSettings.ConfigurationFile, string.Empty);
+            string configFile = package.Settings.GetValueOrDefault(SettingDefinitions.ConfigurationFile);
             if (configFile != string.Empty)
                 return Path.Combine(appBase, configFile);
 
@@ -268,9 +269,9 @@ namespace TestCentric.Engine.Internal
 
         public static string GetPrivateBinPath(string appBase, TestPackage package)
         {
-            var binPath = package.GetSetting(EnginePackageSettings.PrivateBinPath, string.Empty);
+            var binPath = package.Settings.GetValueOrDefault(SettingDefinitions.PrivateBinPath);
 
-            if (package.GetSetting(EnginePackageSettings.AutoBinPath, binPath == string.Empty))
+            if (string.IsNullOrEmpty(binPath) || package.Settings.GetValueOrDefault(SettingDefinitions.AutoBinPath))
                 binPath = package.SubPackages.Count > 0
                     ? GetPrivateBinPath(appBase, package.SubPackages)
                     : package.FullName != null
