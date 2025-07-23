@@ -8,6 +8,7 @@ using TestCentric.Engine.Drivers;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Extensibility;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace TestCentric.Engine.Runners
 {
@@ -84,15 +85,15 @@ namespace TestCentric.Engine.Runners
             var testFile = TestPackage.FullName;
             log.Info($"Loading package {testFile}");
 
-            string targetFramework = TestPackage.GetSetting(EnginePackageSettings.ImageTargetFrameworkName, (string)null);
-            string frameworkReference = TestPackage.GetSetting(EnginePackageSettings.ImageTestFrameworkReference, (string)null);
-            bool skipNonTestAssemblies = TestPackage.GetSetting(EnginePackageSettings.SkipNonTestAssemblies, false);
+            string targetFramework = TestPackage.Settings.GetValueOrDefault(SettingDefinitions.ImageTargetFrameworkName);
+            string frameworkReference = TestPackage.Settings.GetValueOrDefault(SettingDefinitions.ImageTestFrameworkReference);
+            bool skipNonTestAssemblies = TestPackage.Settings.GetValueOrDefault(SettingDefinitions.SkipNonTestAssemblies);
 
             if (DriverService == null)
                 DriverService = new DriverService();
 
             if (_assemblyResolver != null && !TestDomain.IsDefaultAppDomain()
-                && TestPackage.GetSetting(EnginePackageSettings.ImageRequiresDefaultAppDomainAssemblyResolver, false))
+                && TestPackage.Settings.GetValueOrDefault(SettingDefinitions.ImageRequiresDefaultAppDomainAssemblyResolver))
             {
                 // It's OK to do this in the loop because the Add method
                 // checks to see if the path is already present.
@@ -102,12 +103,15 @@ namespace TestCentric.Engine.Runners
             log.Debug("Getting agent from DriverService");
             _driver = DriverService.GetDriver(TestDomain, testFile, targetFramework, skipNonTestAssemblies);
             _driver.ID = TestPackage.ID;
-
             log.Debug($"Using driver {_driver.GetType().Name}");
+
+            var frameworkSettings = new Dictionary<string, object>();
+            foreach (var setting in TestPackage.Settings)
+                frameworkSettings.Add(setting.Name, setting.Value);
 
             try
             {
-                return LoadResult = new TestEngineResult(_driver.Load(testFile, TestPackage.Settings));
+                return LoadResult = new TestEngineResult(_driver.Load(testFile, frameworkSettings));
             }
             catch (Exception ex) when (!(ex is EngineException))
             {

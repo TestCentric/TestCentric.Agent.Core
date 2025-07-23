@@ -49,7 +49,7 @@ namespace TestCentric.Engine.Internal
             string basePath = Path.GetDirectoryName(Path.GetDirectoryName(assemblyDir));
             string relPath = assemblyDir.Substring(basePath.Length + 1);
 
-            _package.Settings["BasePath"] = basePath;
+            _package.Settings.Add(SettingDefinitions.BasePath.WithValue(basePath));
             var domain = _domainManager.CreateDomain(_package);
 
             Assert.That(domain, Is.Not.Null);

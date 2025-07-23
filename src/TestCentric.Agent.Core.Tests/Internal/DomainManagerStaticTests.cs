@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace TestCentric.Engine.Internal
@@ -97,7 +98,7 @@ namespace TestCentric.Engine.Internal
 
             var package = new TestPackage(filePath);
             if (appBase != null)
-                package.Settings["BasePath"] = appBase;
+                package.Settings.Add(SettingDefinitions.BasePath.WithValue(appBase));
 
             Assert.That(DomainManager.GetApplicationBase(package), Is.SamePath(expected));
         }
@@ -110,7 +111,7 @@ namespace TestCentric.Engine.Internal
             appBase = TestPath(appBase);
             expected = TestPath(expected);
 
-            var package = new TestPackage(filePath);
+            var package = new TestPackage(filePath).SubPackages.First();
 
             Assert.That(DomainManager.GetPrivateBinPath(appBase, package), Is.EqualTo(expected));
         }
@@ -128,7 +129,7 @@ namespace TestCentric.Engine.Internal
 
             var package = new TestPackage(filePath);
             if (configSetting != null)
-                package.Settings["ConfigurationFile"] = configSetting;
+                package.Settings.Add(SettingDefinitions.ConfigurationFile.WithValue(configSetting));
 
             Assert.That(DomainManager.GetConfigFile(appBase, package), Is.EqualTo(expected));
         }
@@ -140,7 +141,7 @@ namespace TestCentric.Engine.Internal
         /// </summary>
         private static string TestPath(string path)
         {
-            if (path != null && Path.DirectorySeparatorChar != '/')
+            if (!string.IsNullOrEmpty(path) && Path.DirectorySeparatorChar != '/')
             {
                 path = path.Replace('/', Path.DirectorySeparatorChar);
                 if (path[0] == Path.DirectorySeparatorChar)

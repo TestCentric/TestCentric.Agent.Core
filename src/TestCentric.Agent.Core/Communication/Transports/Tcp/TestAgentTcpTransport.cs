@@ -82,8 +82,8 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
             log.Debug($"  Name={package.Name}");
             log.Debug($"  FullName={package.FullName}");
             log.Debug("  Settings:");
-            foreach(var key in package.Settings.Keys)
-                log.Debug($"    {key}={package.Settings[key]}");
+            foreach(var setting in package.Settings)
+                log.Debug($"    {setting.Name}={setting.Value}");
 
             return Agent.CreateRunner(package);
         }
