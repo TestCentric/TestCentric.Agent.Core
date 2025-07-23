@@ -6,7 +6,6 @@
 #if NETFRAMEWORK
 using System;
 using System.IO;
-using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Tests.Assemblies;
 

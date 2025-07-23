@@ -8,7 +8,6 @@ using TestCentric.Engine.Drivers;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Extensibility;
 using System.ComponentModel;
-using NUnit.Common;
 using System.Collections.Generic;
 
 namespace TestCentric.Engine.Runners

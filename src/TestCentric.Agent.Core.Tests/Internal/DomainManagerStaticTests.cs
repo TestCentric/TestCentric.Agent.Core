@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using NUnit.Common;
 using NUnit.Framework;
 
 namespace TestCentric.Engine.Internal

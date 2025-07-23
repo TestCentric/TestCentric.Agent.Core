@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Reflection;
 using System.Security.Principal;
-using NUnit.Common;
 
 namespace TestCentric.Engine.Internal
 {
@@ -271,7 +270,7 @@ namespace TestCentric.Engine.Internal
         {
             var binPath = package.Settings.GetValueOrDefault(SettingDefinitions.PrivateBinPath);
 
-            if (string.IsNullOrEmpty(binPath) || package.Settings.GetValueOrDefault(SettingDefinitions.AutoBinPath))
+            if (string.IsNullOrEmpty(binPath))
                 binPath = package.SubPackages.Count > 0
                     ? GetPrivateBinPath(appBase, package.SubPackages)
                     : package.FullName != null
