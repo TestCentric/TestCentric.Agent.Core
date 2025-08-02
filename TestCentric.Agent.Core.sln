@@ -39,6 +39,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "windows-forms-test", "src\TestData\windows-forms-test\windows-forms-test.csproj", "{FE2601F1-2E3F-45DE-B812-F7764F02CAB2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{13F7EF0F-31AD-4EE0-9391-7BE7BCAA9756}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{64CC1A42-B482-4F8E-BBEF-6F3435BCCB66}"
 	ProjectSection(SolutionItems) = preProject
