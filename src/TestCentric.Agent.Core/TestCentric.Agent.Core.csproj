@@ -10,6 +10,7 @@
 		<AssemblyTitle>TestCentric Agent Core</AssemblyTitle>
 		<Description>Base for all Pluggable Agents</Description>
 		<Copyright>Copyright (c) 2023 Charlie Poole</Copyright>
+		<LangVersion>12</LangVersion>
 	</PropertyGroup>
 
 	<!-- Suppress warnings due to use of version 7.0 of Microsoft.Extensions.DependencyModel -->
@@ -44,8 +45,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TestCentric.Engine.Api" Version="2.0.0-dev00006" />
-		<PackageReference Include="TestCentric.Extensibility" Version="3.1.0" />
+		<PackageReference Include="TestCentric.Engine.Api" Version="2.0.0-dev00009" />
+		<PackageReference Include="TestCentric.Extensibility" Version="3.2.0" />
 		<PackageReference Include="TestCentric.Metadata" Version="3.0.4" />
 		<PackageReference Include="TestCentric.InternalTrace" Version="1.2.1" />
 	</ItemGroup>

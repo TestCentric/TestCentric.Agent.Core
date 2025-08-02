@@ -28,7 +28,11 @@ namespace TestCentric.Engine.Drivers
         {
             log.Debug("Creating ExtensionManager");
             var thisAssembly = Assembly.GetExecutingAssembly();
-            var extensionManager = new ExtensionManager("/TestCentric/Engine/TypeExtensions/");
+            var extensionManager = new ExtensionManager()
+            {
+                TypeExtensionPath = "/TestCentric/Engine/TypeExtensions",
+                PackagePrefixes = ["TestCentric.Extension.", "NUnit.Extension."]
+            };
 
             foreach (IDriverFactory factory in extensionManager.GetExtensions<IDriverFactory>())
                 _factories.Add(factory);
