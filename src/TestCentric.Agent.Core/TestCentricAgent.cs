@@ -10,12 +10,7 @@ using System.Security;
 using TestCentric.Engine.Agents;
 using TestCentric.Engine.Internal;
 using System.Reflection;
-
-#if NETFRAMEWORK
-using TestCentric.Engine.Communication.Transports.Remoting;
-#else
 using TestCentric.Engine.Communication.Transports.Tcp;
-#endif
 
 namespace TestCentric.Agents
 {
@@ -62,11 +57,7 @@ namespace TestCentric.Agents
 
             log.Info("Starting RemoteTestAgent");
             Agent = new RemoteTestAgent(options.AgentId);
-#if NETFRAMEWORK
-            Agent.Transport = new TestAgentRemotingTransport(Agent, options.AgencyUrl);
-#else
             Agent.Transport = new TestAgentTcpTransport(Agent, options.AgencyUrl);
-#endif
 
             try
             {
