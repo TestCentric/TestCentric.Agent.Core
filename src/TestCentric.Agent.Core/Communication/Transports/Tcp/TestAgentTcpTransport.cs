@@ -48,7 +48,6 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
         {
             try
             {
-                System.Diagnostics.Debugger.Launch();
                 // Connect to the server
                 log.Debug($"Connecting to TestAgency at {_agencyUrl}");
                 _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
