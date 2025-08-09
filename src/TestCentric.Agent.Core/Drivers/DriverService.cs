@@ -34,13 +34,13 @@ namespace TestCentric.Engine.Drivers
                 PackagePrefixes = ["TestCentric.Extension.", "NUnit.Extension."]
             };
 
-            foreach (IDriverFactory factory in extensionManager.GetExtensions<IDriverFactory>())
-                _factories.Add(factory);
+            foreach (var node in extensionManager.GetExtensionNodes<IDriverFactory>())
+                _factories.Add((IDriverFactory)node.ExtensionObject);
 
 #if NETFRAMEWORK
-            var node = extensionManager.GetExtensionNode("/NUnit/Engine/NUnitV2Driver");
-            if (node != null)
-                _factories.Add(new NUnit2DriverFactory(node));
+            var v2DriverNode = extensionManager.GetExtensionNode("/NUnit/Engine/NUnitV2Driver");
+            if (v2DriverNode != null)
+                _factories.Add(new NUnit2DriverFactory(v2DriverNode));
 #endif
 
             _factories.Add(new NUnit3DriverFactory());
