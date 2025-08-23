@@ -54,16 +54,12 @@ namespace TestCentric.Engine.Agents
         /// Stop the agent, releasing any resources
         /// </summary>
         /// <remarks>
-        /// Using the Remoting transport, the agent stops the transport. Using TCP
-        /// transport, the transport stops the agent.
+        /// Although the agent starts the transport, it doesn't stop it.
+        /// Instead, the transport stops the agent by calling this method.
         /// </remarks>
         public override void Stop()
         {
             log.Debug("Stopping");
-#if NETFRAMEWORK
-            // For remoting, the agent stops the transport, but for TCP the transport is stopped directly
-            Transport.Stop();
-#endif
             StopSignal.Set();
         }
 
