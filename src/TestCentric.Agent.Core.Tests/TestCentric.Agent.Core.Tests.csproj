@@ -5,9 +5,6 @@
         <TargetFrameworks>net35;net462;netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
 		<OutputPath>..\..\bin\$(Configuration)\agent-core-tests\</OutputPath>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<CheckEolTargetFramework>false</CheckEolTargetFramework>
-		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
 	<!-- Suppress warnings due to use of version 7.0 of Microsoft.Extensions.DependencyModel -->
@@ -27,19 +24,14 @@
 		<Reference Include="System.Web" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net35' Or '$(TargetFramework)' == 'netcoreapp3.1'">
-		<PackageReference Include="NUnit" Version="3.14.0" />
-		<PackageReference Include="NUnitLite" Version="3.14.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="NUnit" Version="4.1.0" />
-		<PackageReference Include="NUnitLite" Version="4.1.0" />
+	<ItemGroup>
+		<PackageReference Include="NUnit" Version="$(NUnitVersion)" />
+		<PackageReference Include="NUnitLite" Version="$(NUnitVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TestCentric.Engine.Api" Version="2.0.0-dev00009" />
-		<PackageReference Include="TestCentric.Extensibility" Version="4.0.0-dev00002" />
+		<PackageReference Include="TestCentric.Engine.Api" Version="$(EngineVersion)" />
+		<PackageReference Include="TestCentric.Extensibility" Version="$(ExtensibilityVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>

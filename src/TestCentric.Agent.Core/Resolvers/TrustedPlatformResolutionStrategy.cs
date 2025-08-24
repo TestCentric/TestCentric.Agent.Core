@@ -17,7 +17,7 @@ namespace TestCentric.Engine.Internal
     {
         private static readonly Logger log = InternalTrace.GetLogger(nameof(TrustedPlatformResolutionStrategy));
 
-        private readonly string[] _trustedAssemblies = new string[0];
+        private readonly string[] _trustedAssemblies = Array.Empty<string>();
 
         public TrustedPlatformResolutionStrategy(TestAssemblyResolver resolver) : base(resolver)
         {

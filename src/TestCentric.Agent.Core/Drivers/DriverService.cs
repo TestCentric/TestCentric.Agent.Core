@@ -22,7 +22,7 @@ namespace TestCentric.Engine.Drivers
     {
         static readonly Logger log = InternalTrace.GetLogger("DriverService");
 
-        readonly IList<IDriverFactory> _factories = new List<IDriverFactory>();
+        readonly List<IDriverFactory> _factories = new List<IDriverFactory>();
 
         public DriverService()
         {
@@ -69,7 +69,7 @@ namespace TestCentric.Engine.Drivers
                 // any true Portable assembly would have a Profile as part of its name.
                 var platform = targetFramework == ".NETPortable,Version=v5.0"
                     ? ".NETStandard"
-                    : targetFramework.Split(new char[] { ',' })[0];
+                    : targetFramework.Split([','])[0];
 
                 if (platform == "Silverlight" || platform == ".NETPortable" || platform == ".NETStandard" || platform == ".NETCompactFramework")
                     return new InvalidAssemblyFrameworkDriver(assemblyPath, platform + " test assemblies are not supported by this version of the engine");

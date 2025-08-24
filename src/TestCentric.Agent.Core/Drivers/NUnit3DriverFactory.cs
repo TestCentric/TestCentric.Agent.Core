@@ -50,7 +50,7 @@ namespace TestCentric.Engine.Drivers
         /// <returns></returns>
         public IFrameworkDriver GetDriver(AssemblyName reference)
         {
-            Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework", "reference");
+            Guard.ArgumentValid(IsSupportedTestFramework(reference), "Invalid framework", nameof(reference));
 #if NETSTANDARD
             log.Info("Using NUnitNetStandardDriver");
             return new NUnitNetStandardDriver();

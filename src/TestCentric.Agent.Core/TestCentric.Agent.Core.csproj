@@ -5,12 +5,8 @@
 		<TargetFrameworks>net20;net462;netstandard2.0;netcoreapp3.1;net6.0;net7.0;net8.0</TargetFrameworks>
 		<GenerateSupportedRuntime>false</GenerateSupportedRuntime>
 		<OutputPath>..\..\bin\$(Configuration)\agent-core</OutputPath>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<AssemblyTitle>TestCentric Agent Core</AssemblyTitle>
 		<Description>Base for all Pluggable Agents</Description>
-		<Copyright>Copyright (c) 2023 Charlie Poole</Copyright>
-		<LangVersion>12</LangVersion>
 	</PropertyGroup>
 
 	<!-- Suppress warnings due to use of version 7.0 of Microsoft.Extensions.DependencyModel -->
@@ -45,10 +41,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TestCentric.Engine.Api" Version="2.0.0-dev00009" />
-		<PackageReference Include="TestCentric.Extensibility" Version="4.0.0-dev00002" />
-		<PackageReference Include="TestCentric.Metadata" Version="3.0.4" />
-		<PackageReference Include="TestCentric.InternalTrace" Version="1.2.1" />
+		<PackageReference Include="TestCentric.Engine.Api" Version="$(EngineVersion)" />
+		<PackageReference Include="TestCentric.Extensibility" Version="$(ExtensibilityVersion)" />
+		<PackageReference Include="TestCentric.Metadata" Version="$(MetadataVersion)" />
+		<PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
 	</ItemGroup>
 
 </Project>
