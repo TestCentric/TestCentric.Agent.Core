@@ -34,7 +34,7 @@ namespace TestCentric.Engine.Internal
 
             var name = text.Substring(0, index1);
             var version = text.Substring(index1 + 1, index2 - index1 - 1);
-            var basedir = text.Substring(index2 + 1).Trim(new[] { ' ', '[', ']' });
+            var basedir = text.Substring(index2 + 1).Trim([' ', '[', ']']);
             var location = Path.Combine(basedir, version);
             //var location = basedir + Path.DirectorySeparatorChar + version;
 

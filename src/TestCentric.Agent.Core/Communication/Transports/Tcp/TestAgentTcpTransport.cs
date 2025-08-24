@@ -34,7 +34,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
             Guard.ArgumentNotNullOrEmpty(serverUrl, nameof(serverUrl));
             _agencyUrl = serverUrl;
 
-            var parts = serverUrl.Split(new char[] { ':' });
+            var parts = serverUrl.Split([':']);
             Guard.ArgumentValid(parts.Length == 2, "Invalid server address specified. Must be a valid endpoint including the port number", nameof(serverUrl));
             ServerEndPoint = new IPEndPoint(IPAddress.Parse(parts[0]), int.Parse(parts[1]));
             log.Debug($"Using server EndPoint {ServerEndPoint}");

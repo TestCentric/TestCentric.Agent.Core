@@ -83,7 +83,7 @@ namespace TestCentric.Agents
             OutWriter.WriteLine();
         }
 
-        private TAttr GetAttribute<TAttr>(Assembly assembly) where TAttr : Attribute
+        private static TAttr GetAttribute<TAttr>(Assembly assembly) where TAttr : Attribute
         {
 #if (NETCOREAPP || NET462_OR_GREATER)
             return assembly?.GetCustomAttribute<TAttr>();

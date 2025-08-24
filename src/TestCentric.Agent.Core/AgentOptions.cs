@@ -120,19 +120,19 @@ namespace TestCentric.Agents
             return arg.StartsWith("--");
         }
 
-        private void ValueRequiredError(string arg) =>
+        private static void ValueRequiredError(string arg) =>
             throw new Exception($"Option requires a value: {arg}");
 
-        private void ValueNotAllowedError(string arg) =>
+        private static void ValueNotAllowedError(string arg) =>
             throw new Exception($"Option does not take a value: {arg}");
 
-        private void InvalidArgumentError(string arg) =>
+        private static void InvalidArgumentError(string arg) =>
             throw new Exception($"Invalid argument: {arg}");
 
-        private void FileNotFoundError(string arg) =>
+        private static void FileNotFoundError(string arg) =>
             throw new FileNotFoundException($"FileNotFound: {arg}");
 
-        private void TooManyFilesError(int count) =>
+        private static void TooManyFilesError(int count) =>
             throw new ArgumentException($"Only one file argument is allowed but {count} were supplied");
     }
 }

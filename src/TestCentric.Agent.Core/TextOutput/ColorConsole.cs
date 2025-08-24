@@ -148,6 +148,7 @@ namespace TestCentric.Agents.TextOutput
         public void Dispose()
         {
             Console.ForegroundColor = _originalColor;
+            GC.SuppressFinalize(this);
         }
     }
 }
